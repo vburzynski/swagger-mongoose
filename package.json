@@ -7,12 +7,13 @@
     "test": "test"
   },
   "dependencies": {
+    "jsonapi-serializer": "^3.5.3",
     "lodash": "^4.6.1"
   },
   "devDependencies": {
     "async": "^2.0.0",
-    "chai": "^3.5.0",
-    "mocha": "^2.4.5",
+    "chai": "^4.0.2",
+    "mocha": "^3.4.2",
     "mockgoose": "^7.0.0",
     "mongoose": "^4.8.6",
     "yamljs": "^0.3.0"
@@ -21,7 +22,8 @@
     "mongoose": "^4.8.6"
   },
   "scripts": {
-    "test": "mocha --timeout 60000"
+    "test": "mocha --timeout 60000",
+    "debug-test": "mocha --timeout 60000 --inspect-brk"
   },
   "repository": {
     "type": "git",
