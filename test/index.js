@@ -13,6 +13,7 @@ var mockgoose = new Mockgoose(mongoose);
 var chai = require('chai');
 var Schema = mongoose.Schema;
 var _ = require('lodash');
+var JSONAPISerializer = require('jsonapi-serializer').Serializer;
 
 var { assert, expect } = chai;
 
@@ -464,20 +465,52 @@ describe('swagger-mongoose tests', function () {
       });
     });
 
-    it('should process definitions which follow the JSON API specification', function() {
+    beforeEach(function(){
       var yaml = fs.readFileSync('./test/jsonapi.yaml', 'utf8');
       var swagger = YAML.parse(yaml);
       var models = swaggerMongoose.compile(swagger).models;
-      var schema = models.Example.schema;
-
-      expect(_.keys(schema.paths)).to.have.members(['id', 'name', 'num', '_id', '__v']);
-      expect(schema.paths.id.instance).to.equal('String');
-      expect(schema.paths.id.options.type).to.equal(String);
-      expect(schema.paths.name.instance).to.equal('String');
-      expect(schema.paths.name.options.type).to.equal(String);
-      expect(schema.paths.num.instance).to.equal('Number');
-      expect(schema.paths.num.options.type).to.equal(Number);
+      this.Model = models.Example;
+      this.schema = models.Example.schema;
     });
 
+    it('should process definitions which follow the JSON API specification', function() {
+      expect(_.keys(this.schema.paths)).to.have.members(['name', 'numExample', '_id', '__v']);
+      expect(this.schema.paths.name.instance).to.equal('String');
+      expect(this.schema.paths.name.options.type).to.equal(String);
+      expect(this.schema.paths.numExample.instance).to.equal('Number');
+      expect(this.schema.paths.numExample.options.type).to.equal(Number);
+    });
+
+    it('should serialize to json', function() {
+      var example = new this.Model({
+        name: 'my example #1',
+        numExample: 23
+      });
+      example.save();
+
+      var json = `{"name":"my example #1","numExample":23,"_id":"${example.id}","id":"${example.id}"}`;
+
+      expect(JSON.stringify(example.toJSON())).to.equal(json);
+    });
+
+    it('should be serialiable to JSON API format', function() {
+      var serializer = new JSONAPISerializer('Example', {
+        id: '_id',
+        attributes: ['name', 'numExample'],
+        pluralizeType: false
+      });
+
+      var example = new this.Model({
+        name: 'test',
+        numExample: 42
+      });
+      example.save();
+
+      var serialized = serializer.serialize(example);
+      var expected = `{"data":{"type":"Example","id":"${example.id}","attributes":{"name":"test","num-example":42}}}`;
+      var actual = JSON.stringify(serialized);
+
+      expect(actual).to.equal(expected);
+    });
   });
 });

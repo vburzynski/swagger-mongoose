@@ -1,0 +1,92 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Example YAML File
+host: localhost:10010
+basePath: /
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+x-swagger-mongoose:
+  json-api: true
+  key-conversion: camelcase
+paths:
+  /persons:
+    x-swagger-router-controller: persons
+    get:
+      summary: Gets all examples
+      description: Returns a list containing all examples.
+      responses:
+        200:
+          description: A list of examples
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Example"
+    post:
+      summary: Creates an example
+      description: Adds a new example
+      parameters:
+        - name: example
+          in: body
+          description: The example to create.
+          schema:
+            $ref: "#/definitions/Example"
+      responses:
+        204:
+          description: Example succesfully created.
+        400:
+          description: Example couldn't be created.
+  /example/{name}:
+    get:
+      summary: Retrieves a single example
+      description: Returns a single example by name
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: The examples's name
+          type: string
+      responses:
+        200:
+          description: An example
+          schema:
+            $ref: "#/definitions/Example"
+        404:
+          description: The Example does not exist
+
+definitions:
+  Example:
+    type: object
+    required:
+      - id
+      - type
+      - attributes
+    properties:
+      type:
+        type: string
+        enum:
+          - Example
+      id:
+        type: string
+      attributes:
+        type: object
+        required:
+          - name
+        properties:
+          name:
+            type: string
+          num-example:
+            type: double
+
+  # ErrorResponse:
+  #   type: object
+  #   required:
+  #     - message
+  #   properties:
+  #     message:
+  #       type: string
