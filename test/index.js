@@ -26,7 +26,7 @@ describe('swagger-mongoose tests', function () {
     });
   });
 
-  context('Pet Store Tests', function() {
+  context('Core Tests', function() {
     afterEach(function (done) {
       delete mongoose.models.Pet;
       delete mongoose.models.Address;
@@ -82,8 +82,8 @@ describe('swagger-mongoose tests', function () {
         id: 123
       });
       myPet.save(function (err) {
-        assert(err, 'Validation error is missing');
-        assert(err.message === 'Pet validation failed', 'Unexpected error message');
+        assert(err, 'ValidationError: name: Path `name` is required.');
+        assert(err._message === 'Pet validation failed', 'Unexpected error message');
         done();
       });
     });
