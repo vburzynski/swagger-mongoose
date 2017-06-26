@@ -85,10 +85,12 @@ definitions:
           num-example:
             type: double
 
-  # ErrorResponse:
-  #   type: object
-  #   required:
-  #     - message
-  #   properties:
-  #     message:
-  #       type: string
+  ErrorResponse:
+    x-swagger-mongoose:
+      exclude-schema: true
+    type: object
+    required:
+      - message
+    properties:
+      message:
+        type: string
