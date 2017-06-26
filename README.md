@@ -21,9 +21,10 @@ myPet.save();
 
 There are 3 different use cases and 3 new custom options available for the new ```x-swagger-mongoose``` custom property for Swagger documents that are v2 and greater.
 
-Custom options include: ```schema-options```, ```additional-properties```, and ```exclude-schema```
+Custom options include: ```schema-options```, ```additional-properties```, ```exclude-schema```, and ```json-api```
 
 By default the ```exclude-schema``` option is set to false.
+By default the ```json-api``` option is set to false.
 
 Global Schema Options
 ```js
@@ -112,6 +113,33 @@ No Mongo Schema created for this definition
     x-swagger-mongoose:
       exclude-schema: true
 ```
+
+## JSON API
+
+Create Mongo Schema and Model for definition that follows the JSON API specification
+```js
+  SchemaName:
+    type: object
+    x-swagger-mongoose:
+      json-api: true
+    required:
+      - id
+      - type
+      - attributes
+    properties:
+      type:
+        type: string
+      id:
+        type: string
+      attributes:
+        type: object
+        required:
+          - name
+        properties:
+          name:
+            type: string
+```
+
 ## Custom validators
 
 This is a bit of a work around, but in the top-level of your swagger doc:
