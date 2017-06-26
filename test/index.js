@@ -185,8 +185,8 @@ describe('swagger-mongoose tests', function () {
             results.car._id
           ],
           phone: {
-            home: "(123) 456-7890",
-            mobile: "(012) 345-6789"
+            home: '(123) 456-7890',
+            mobile: '(012) 345-6789'
           }
         });
         person.save(function (err, data) {
@@ -235,7 +235,7 @@ describe('swagger-mongoose tests', function () {
         var Human = models.Human;
         var Person = models.Person;
         var House = models.House;
-        assert.propertyVal(Person.schema.paths.login._index, 'unique', 'true', 'Person.login should have a unique index')
+        assert.propertyVal(Person.schema.paths.login._index, 'unique', 'true', 'Person.login should have a unique index');
         assert.sameDeepMembers(Human.schema._indexes[0], [ { firstName: 1, lastName: 1 },{ unique: true, background: true } ], 'Human document should have an object of firstName/lastName, and a unique:true object');
         assert.sameDeepMembers(House.schema._indexes[0], [ { lng: 1, lat: 1 }, { background: true } ], 'House document should have an object of lng/lat, but not a unique key');
 
@@ -253,28 +253,28 @@ describe('swagger-mongoose tests', function () {
           firstName: 'James',
           lastName: 'Bond',
           phone: {
-            home: "(123) 456-7890",
-            mobile: "(012) 345-6789"
+            home: '(123) 456-7890',
+            mobile: '(012) 345-6789'
           }
         });
-        person.save(function(err,data){
+        person.save(function(){
           var copyCat = new Person({
             login: 'jb@mi6.gov',
             firstName: 'Jake',
             lastName: 'Barrington',
           });
-          copyCat.save(function(err,data){
+          copyCat.save(function(err){
             if(err){
               assert.equal(err.name, 'MongoError');
-              assert.include(err.errmsg, 'duplicate key')
-              assert.include(err.errmsg, 'jb@mi6.gov')
+              assert.include(err.errmsg, 'duplicate key');
+              assert.include(err.errmsg, 'jb@mi6.gov');
               done();
             } else {
-              assert.fail('unique index should have prevented this')
+              assert.fail('unique index should have prevented this');
               done();
             }
-          })
-        })
+          });
+        });
       });
 
     it('should identify and throw errors on compound indices marked unique', function (done) {
@@ -284,24 +284,24 @@ describe('swagger-mongoose tests', function () {
         var human = new Human({
           firstName: 'James',
           lastName: 'Bond'
-        })
-        human.save(function(err,data){
+        });
+        human.save(function(){
           var copyCat = new Human({
             firstName: 'James',
             lastName: 'Bond'
-          })
+          });
           copyCat.save(function(err,data){
             if (err) {
               assert.equal(err.name, 'MongoError');
-              assert.include(err.errmsg, 'duplicate key')
-              assert.include(err.errmsg, '{ : "James", : "Bond" }')
+              assert.include(err.errmsg, 'duplicate key');
+              assert.include(err.errmsg, '{ : "James", : "Bond" }');
               done();
             } else {
               assert.ok(data);
               done();
             }
-          })
-        })
+          });
+        });
 
       });
 
@@ -315,22 +315,22 @@ describe('swagger-mongoose tests', function () {
           firstName: 'James',
           lastName: 'Bond',
           phone: {
-            home: "(123) 456-789",
-            mobile: "(012) 345-6789"
+            home: '(123) 456-789',
+            mobile: '(012) 345-6789'
           }
         });
 
-        person.save(function(err,data){
+        person.save(function(err){
           if(err){
             var expectedErrorMessage = _.get(err, 'errors[\'phone.home\'].message');
             assert.equal(err.name, 'ValidationError');
-            assert.include(expectedErrorMessage, 'is not a valid home phone number!')
+            assert.include(expectedErrorMessage, 'is not a valid home phone number!');
             done();
           } else {
-            assert.fail('phone validator should have prevented this')
+            assert.fail('phone validator should have prevented this');
             done();
           }
-        })
+        });
       });
 
     it('should identify and add enum to schema', function (done) {
@@ -343,17 +343,17 @@ describe('swagger-mongoose tests', function () {
           model: 'Gremlin'
         });
 
-        car.save(function(err,data){
+        car.save(function(err){
           if(err){
             var expectedErrorMessage = _.get(err, 'errors.provider.message');
             assert.equal(err.name, 'ValidationError');
-            assert.include(expectedErrorMessage, 'is not a valid enum value')
+            assert.include(expectedErrorMessage, 'is not a valid enum value');
             done();
           } else {
-            assert.fail('enum for car should have prevented this')
+            assert.fail('enum for car should have prevented this');
             done();
           }
-        })
+        });
       });
 
     it('should create an example pet from a JSON object with default schema options', function (done) {

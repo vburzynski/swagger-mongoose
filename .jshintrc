@@ -18,14 +18,5 @@
   "trailing": true,
   "smarttabs": true,
   "sub": true,
-  "white": true,
-  "globals": {
-    "describe": false,
-    "it": false,
-    "before": false,
-    "beforeEach": false,
-    "after": false,
-    "afterEach": false,
-    "context": false
-  }
+  "white": true
 }
