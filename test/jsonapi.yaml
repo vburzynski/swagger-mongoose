@@ -14,6 +14,8 @@ produces:
 x-swagger-mongoose:
   json-api: true
   key-conversion: camelcase
+  schema-options:
+    timestamps: true
 paths:
   /persons:
     x-swagger-router-controller: persons

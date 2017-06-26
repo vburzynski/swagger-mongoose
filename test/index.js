@@ -474,7 +474,7 @@ describe('swagger-mongoose tests', function () {
     });
 
     it('should process definitions which follow the JSON API specification', function() {
-      expect(_.keys(this.schema.paths)).to.have.members(['name', 'numExample', '_id', '__v']);
+      expect(_.keys(this.schema.paths)).to.have.members(['name', 'numExample', '_id', '__v', 'createdAt', 'updatedAt']);
       expect(this.schema.paths.name.instance).to.equal('String');
       expect(this.schema.paths.name.options.type).to.equal(String);
       expect(this.schema.paths.numExample.instance).to.equal('Number');
