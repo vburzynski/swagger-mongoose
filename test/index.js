@@ -457,7 +457,9 @@ describe('swagger-mongoose tests', function () {
 
   context.only('JSON API Tests', function () {
     afterEach(function (done) {
-      delete mongoose.models.Example;
+      delete mongoose.models.Person;
+      delete mongoose.models.Address;
+      delete mongoose.models.Phone;
       mockgoose.helper.reset().then(function () {
         done();
       });
@@ -471,7 +473,16 @@ describe('swagger-mongoose tests', function () {
 
     it('should process definitions which follow the JSON API specification', function() {
       var schema = this.models.Person.schema;
-      expect(_.keys(schema.paths)).to.have.members(['name', 'numExample', '_id', '__v', 'createdAt', 'updatedAt', 'address']);
+      expect(_.keys(schema.paths)).to.have.members([
+        '__v',
+        '_id',
+        'address',
+        'createdAt',
+        'name',
+        'numbers',
+        'numExample',
+        'updatedAt',
+      ]);
       expect(schema.paths.name.instance).to.equal('String');
       expect(schema.paths.name.options.type).to.equal(String);
       expect(schema.paths.numExample.instance).to.equal('Number');
@@ -498,14 +509,44 @@ describe('swagger-mongoose tests', function () {
       expect(actual).to.equal(expected);
     });
 
-    it('should have a relationship to the Address model', function () {
+    it('should process singular relationships', function* () {
       var Person = this.models.Person;
       var Address = this.models.Address;
+      var Phone = this.models.Phone;
 
       expect(Person).to.exist;
       expect(Address).to.exist;
+      expect(Phone).to.exist;
 
       expect(Person.schema.paths.address.instance).to.equal("ObjectID");
+
+      expect(Person.schema.paths.numbers.instance).to.equal('Array');
+      expect(Person.schema.paths.numbers.options.type[0].type).to.equal(Schema.Types.ObjectId);
+      expect(Person.schema.paths.numbers.options.type[0].ref).to.equal('Phone');
+
+      var refs = yield {
+        address: Address.create({
+          line1: "9999 Street St.",
+          line2: "",
+          city: "City",
+          state: "WI"
+        }),
+        phone: Phone.create({
+          number: "(999) 999-9999"
+        }),
+      };
+
+      var person = yield Person.create({
+        name: "Sally",
+        address: refs.address._id,
+        numbers: [
+          refs.phone._id
+        ]
+      });
+
+      expect(person.name).to.equal("Sally");
+      expect(person.address).to.equal(refs.address._id);
+      expect(person.numbers[0]).to.equal(refs.phone._id);
     });
   });
 });

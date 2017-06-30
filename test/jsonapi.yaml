@@ -86,6 +86,13 @@ definitions:
           num-example:
             type: double
       relationships:
+        numbers:
+          type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/definitions/PhoneIdentifier"
         address:
           type: object
           properties:
@@ -122,6 +129,31 @@ definitions:
             type: string
           state:
             type: string
+  PhoneIdentifier:
+    x-swagger-mongoose:
+      exclude-schema: true
+    type: object
+    properties:
+      id:
+        type: string
+      type:
+        type: string
+        enum:
+          - Phone
+  Phone:
+    x-swagger-mongoose:
+      resource-object: true
+    type: object
+    properties:
+      id:
+        type: string
+      type:
+        type: string
+        enum:
+          - Phone
+      attributes:
+        number:
+          type: string
   ErrorResponse:
     x-swagger-mongoose:
       exclude-schema: true
