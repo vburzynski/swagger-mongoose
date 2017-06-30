@@ -12,7 +12,6 @@ consumes:
 produces:
   - application/json
 x-swagger-mongoose:
-  json-api: true
   key-conversion: camelcase
   schema-options:
     timestamps: true
@@ -28,7 +27,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/Example"
+              $ref: "#/definitions/Person"
     post:
       summary: Creates an example
       description: Adds a new example
@@ -37,12 +36,12 @@ paths:
           in: body
           description: The example to create.
           schema:
-            $ref: "#/definitions/Example"
+            $ref: "#/definitions/Person"
       responses:
         204:
-          description: Example succesfully created.
+          description: Person succesfully created.
         400:
-          description: Example couldn't be created.
+          description: Person couldn't be created.
   /example/{name}:
     get:
       summary: Retrieves a single example
@@ -57,12 +56,14 @@ paths:
         200:
           description: An example
           schema:
-            $ref: "#/definitions/Example"
+            $ref: "#/definitions/Person"
         404:
-          description: The Example does not exist
+          description: The Person does not exist
 
 definitions:
-  Example:
+  Person:
+    x-swagger-mongoose:
+      resource-object: true
     type: object
     required:
       - id
@@ -72,7 +73,7 @@ definitions:
       type:
         type: string
         enum:
-          - Example
+          - Person
       id:
         type: string
       attributes:
@@ -84,7 +85,43 @@ definitions:
             type: string
           num-example:
             type: double
-
+      relationships:
+        address:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/AddressIdentifier"
+  AddressIdentifier:
+    x-swagger-mongoose:
+      exclude-schema: true
+    type: object
+    properties:
+      id:
+        type: string
+      type:
+        type: string
+        enum:
+          - Address
+  Address:
+    x-swagger-mongoose:
+      resource-object: true
+    type: object
+    properties:
+      id:
+        type: string
+      type:
+        type: string
+      attributes:
+        type: object
+        properties:
+          line1:
+            type: string
+          line2:
+            type: string
+          city:
+            type: string
+          state:
+            type: string
   ErrorResponse:
     x-swagger-mongoose:
       exclude-schema: true

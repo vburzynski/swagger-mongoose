@@ -466,49 +466,58 @@ describe('swagger-mongoose tests', function () {
     beforeEach(function(){
       var yaml = fs.readFileSync('./test/jsonapi.yaml', 'utf8');
       var swagger = YAML.parse(yaml);
-      var models = swaggerMongoose.compile(swagger).models;
-      this.Model = models.Example;
-      this.schema = models.Example.schema;
+      this.models = swaggerMongoose.compile(swagger).models;
     });
 
     it('should process definitions which follow the JSON API specification', function() {
-      expect(_.keys(this.schema.paths)).to.have.members(['name', 'numExample', '_id', '__v', 'createdAt', 'updatedAt']);
-      expect(this.schema.paths.name.instance).to.equal('String');
-      expect(this.schema.paths.name.options.type).to.equal(String);
-      expect(this.schema.paths.numExample.instance).to.equal('Number');
-      expect(this.schema.paths.numExample.options.type).to.equal(Number);
+      var schema = this.models.Person.schema;
+      expect(_.keys(schema.paths)).to.have.members(['name', 'numExample', '_id', '__v', 'createdAt', 'updatedAt']);
+      expect(schema.paths.name.instance).to.equal('String');
+      expect(schema.paths.name.options.type).to.equal(String);
+      expect(schema.paths.numExample.instance).to.equal('Number');
+      expect(schema.paths.numExample.options.type).to.equal(Number);
     });
 
     it('should serialize to json', function() {
-      var example = new this.Model({
+      var person = new this.models.Person({
         name: 'my example #1',
         numExample: 23
       });
-      example.save();
+      person.save();
 
-      var json = `{"name":"my example #1","numExample":23,"_id":"${example.id}","id":"${example.id}"}`;
+      var json = `{"name":"my example #1","numExample":23,"_id":"${person.id}","id":"${person.id}"}`;
 
-      expect(JSON.stringify(example.toJSON())).to.equal(json);
+      expect(JSON.stringify(person.toJSON())).to.equal(json);
     });
 
     it('should be serialiable to JSON API format', function() {
-      var serializer = new JSONAPISerializer('Example', {
+      var serializer = new JSONAPISerializer('Person', {
         id: '_id',
         attributes: ['name', 'numExample'],
         pluralizeType: false
       });
 
-      var example = new this.Model({
+      var person = new this.models.Person({
         name: 'test',
         numExample: 42
       });
-      example.save();
+      person.save();
 
-      var serialized = serializer.serialize(example);
-      var expected = `{"data":{"type":"Example","id":"${example.id}","attributes":{"name":"test","num-example":42}}}`;
+      var serialized = serializer.serialize(person);
+      var expected = `{"data":{"type":"Person","id":"${person.id}","attributes":{"name":"test","num-example":42}}}`;
       var actual = JSON.stringify(serialized);
 
       expect(actual).to.equal(expected);
+    });
+
+    it.only('should have a relationship to the Address model', function () {
+      var Person = this.models.Person;
+      var Address = this.models.Address;
+
+      expect(Person).to.exist;
+      expect(Address).to.exist;
+
+      expect(Person.schema.paths.address.instance).to.equal("ObjectId");
     });
   });
 });

@@ -7,6 +7,7 @@
     "test": "test"
   },
   "dependencies": {
+    "co-mocha": "^1.2.0",
     "inflected": "^2.0.2",
     "jsonapi-serializer": "^3.5.3",
     "lodash": "^4.6.1"
