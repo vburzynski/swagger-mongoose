@@ -118,12 +118,54 @@ No Mongo Schema created for this definition
 
 Create Mongo Schema and Model for definition that follows the JSON API specification
 ```js
+definitions:
   SchemaName:
     type: object
     x-swagger-mongoose:
-      json-api: true
+      resource-object: true
     required:
-      - id
+      - type
+      - attributes
+    properties:
+      type:
+        type: string
+      id:
+        type: string
+      attributes:
+        type: object
+        required:
+          - name
+        properties:
+          name:
+            type: string
+      relationships:
+        related:
+          data:
+            $ref: "#/definitions/RelatedIdentifier"
+        otherItem:
+          data:
+            $ref: "#/definitions/Related"
+        manyItems:
+          date:
+            type: array
+            items:
+              $ref: "#/definitions/RelatedIdentifier"
+  RelatedIdentifier:
+    type: object
+    x-swagger-mongoose:
+      exclude-schema: true
+    properties:
+      id:
+        type: string
+      type:
+        type: string
+        enum:
+          - Related
+  Related:
+    type: object
+    x-swagger-mongoose:
+      resource-object: true
+    required:
       - type
       - attributes
     properties:
