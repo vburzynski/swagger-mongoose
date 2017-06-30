@@ -24,7 +24,7 @@
   },
   "scripts": {
     "test": "mocha --timeout 60000",
-    "debug-test": "mocha --timeout 60000 --inspect-brk"
+    "debug": "mocha --timeout 60000 --inspect-brk"
   },
   "repository": {
     "type": "git",
