@@ -509,7 +509,7 @@ describe('swagger-mongoose tests', function () {
       expect(actual).to.equal(expected);
     });
 
-    it('should process singular relationships', function* () {
+    it('should process to-one and to-many relationships', function* () {
       var Person = this.models.Person;
       var Address = this.models.Address;
       var Phone = this.models.Phone;
