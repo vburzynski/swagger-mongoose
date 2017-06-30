@@ -455,7 +455,7 @@ describe('swagger-mongoose tests', function () {
     done();
   });
 
-  context('JSON API Tests', function () {
+  context.only('JSON API Tests', function () {
     afterEach(function (done) {
       delete mongoose.models.Example;
       mockgoose.helper.reset().then(function () {
@@ -471,26 +471,14 @@ describe('swagger-mongoose tests', function () {
 
     it('should process definitions which follow the JSON API specification', function() {
       var schema = this.models.Person.schema;
-      expect(_.keys(schema.paths)).to.have.members(['name', 'numExample', '_id', '__v', 'createdAt', 'updatedAt']);
+      expect(_.keys(schema.paths)).to.have.members(['name', 'numExample', '_id', '__v', 'createdAt', 'updatedAt', 'address']);
       expect(schema.paths.name.instance).to.equal('String');
       expect(schema.paths.name.options.type).to.equal(String);
       expect(schema.paths.numExample.instance).to.equal('Number');
       expect(schema.paths.numExample.options.type).to.equal(Number);
     });
 
-    it('should serialize to json', function() {
-      var person = new this.models.Person({
-        name: 'my example #1',
-        numExample: 23
-      });
-      person.save();
-
-      var json = `{"name":"my example #1","numExample":23,"_id":"${person.id}","id":"${person.id}"}`;
-
-      expect(JSON.stringify(person.toJSON())).to.equal(json);
-    });
-
-    it('should be serialiable to JSON API format', function() {
+    it('should be serialiable to JSON API format', function* () {
       var serializer = new JSONAPISerializer('Person', {
         id: '_id',
         attributes: ['name', 'numExample'],
@@ -501,7 +489,7 @@ describe('swagger-mongoose tests', function () {
         name: 'test',
         numExample: 42
       });
-      person.save();
+      yield person.save();
 
       var serialized = serializer.serialize(person);
       var expected = `{"data":{"type":"Person","id":"${person.id}","attributes":{"name":"test","num-example":42}}}`;
@@ -510,14 +498,14 @@ describe('swagger-mongoose tests', function () {
       expect(actual).to.equal(expected);
     });
 
-    it.only('should have a relationship to the Address model', function () {
+    it('should have a relationship to the Address model', function () {
       var Person = this.models.Person;
       var Address = this.models.Address;
 
       expect(Person).to.exist;
       expect(Address).to.exist;
 
-      expect(Person.schema.paths.address.instance).to.equal("ObjectId");
+      expect(Person.schema.paths.address.instance).to.equal("ObjectID");
     });
   });
 });
