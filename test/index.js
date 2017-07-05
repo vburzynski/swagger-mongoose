@@ -481,6 +481,7 @@ describe('swagger-mongoose tests', function () {
         'name',
         'numbers',
         'numExample',
+        'type',
         'updatedAt',
       ]);
       expect(schema.paths.name.instance).to.equal('String');
