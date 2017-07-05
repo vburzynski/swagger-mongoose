@@ -21,7 +21,7 @@ myPet.save();
 
 There are 3 different use cases and 3 new custom options available for the new ```x-swagger-mongoose``` custom property for Swagger documents that are v2 and greater.
 
-Custom options include: ```schema-options```, ```additional-properties```, ```exclude-schema```, and ```json-api```
+Custom options include: ```schema-options```, ```additional-properties```, ```exclude-schema```, and ```resource-object```
 
 By default the ```exclude-schema``` option is set to false.
 By default the ```json-api``` option is set to false.
@@ -120,12 +120,18 @@ Create Mongo Schema and Model for definition that follows the JSON API specifica
 ```js
 definitions:
   SchemaName:
-    type: object
+    // This is how swagger-mongoose knows this is a JSON API Resource Object.
     x-swagger-mongoose:
       resource-object: true
+
+    type: object
     required:
       - type
       - attributes
+
+    // Properties can be any top-level members of a JSON API Resource Object:
+    // id, type, attributes, relationships, meta, and links. swagger-mongoose will
+    // parse through the attributes and relationships.
     properties:
       type:
         type: string
@@ -150,6 +156,8 @@ definitions:
             type: array
             items:
               $ref: "#/definitions/RelatedIdentifier"
+
+  // Resource Identifier Objects don't need to be kept in the DB, so we exclude them.
   RelatedIdentifier:
     type: object
     x-swagger-mongoose:
