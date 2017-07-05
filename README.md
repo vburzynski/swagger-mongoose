@@ -155,17 +155,19 @@ definitions:
           name:
             type: string
       relationships:
-        related:
-          data:
-            $ref: "#/definitions/RelatedIdentifier"
-        otherItem:
-          data:
-            $ref: "#/definitions/Related"
-        manyItems:
-          date:
-            type: array
-            items:
+        type: object
+        properties:
+          related:
+            data:
               $ref: "#/definitions/RelatedIdentifier"
+          otherItem:
+            data:
+              $ref: "#/definitions/Related"
+          manyItems:
+            date:
+              type: array
+              items:
+                $ref: "#/definitions/RelatedIdentifier"
 
   // Resource Identifier Objects don't need to be kept in the DB, so we exclude them.
   RelatedIdentifier:
