@@ -455,7 +455,7 @@ describe('swagger-mongoose tests', function () {
     done();
   });
 
-  context.only('JSON API Tests', function () {
+  context('JSON API Tests', function () {
     afterEach(function (done) {
       delete mongoose.models.Person;
       delete mongoose.models.Address;
