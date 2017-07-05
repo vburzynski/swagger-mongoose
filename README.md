@@ -19,6 +19,16 @@ var myPet = new Pet({
 myPet.save();
 ```
 
+Here's an example of how to load a YAML swagger file:
+```js
+var swaggerMongoose = require('swagger-mongoose');
+var YAML = require('yamljs');
+
+var yaml = fs.readFileSync('api.yaml');
+var swagger = YAML.parse(yaml);
+var { models, schemas } = swaggerMongoose.compile(swagger);
+```
+
 There are 3 different use cases and 3 new custom options available for the new ```x-swagger-mongoose``` custom property for Swagger documents that are v2 and greater.
 
 Custom options include: ```schema-options```, ```additional-properties```, ```exclude-schema```, and ```resource-object```
