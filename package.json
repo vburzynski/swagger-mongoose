@@ -24,8 +24,8 @@
     "mongoose": "^4.8.6"
   },
   "scripts": {
-    "test": "mocha --timeout 120000 --require co-mocha",
-    "debug": "mocha --timeout 120000 --require co-mocha --inspect-brk"
+    "test": "mocha --timeout 240000 --require co-mocha",
+    "debug": "mocha --timeout 240000 --require co-mocha --inspect-brk"
   },
   "repository": {
     "type": "git",
